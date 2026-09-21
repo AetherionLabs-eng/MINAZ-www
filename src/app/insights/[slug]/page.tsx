@@ -8,7 +8,26 @@ import {
   getInsightBySlug,
   getRelatedInsights,
 } from "@/lib/insights";
+const SITE_URL = "https://minaz.co.uk";
 
+function getAbsoluteImageUrl(
+  image?: string | null,
+) {
+  if (!image) {
+    return `${SITE_URL}/hero-minaz.jpg`;
+  }
+
+  if (
+    image.startsWith("http://") ||
+    image.startsWith("https://")
+  ) {
+    return image;
+  }
+
+  return `${SITE_URL}${
+    image.startsWith("/") ? "" : "/"
+  }${image}`;
+}
 type Props = {
   params: Promise<{
     slug: string;
@@ -19,53 +38,93 @@ type Props = {
 
 export async function generateMetadata({
   params,
-}: Props): Promise<Metadata> {
+}: {
+  params: Promise<{
+    slug: string;
+  }>;
+}) {
   const { slug } = await params;
-  const article = await getInsightBySlug(slug);
+
+  const article =
+    await getInsightBySlug(slug);
 
   if (!article) {
-    return {};
+    return {
+      title: "Insight not found",
+    };
   }
 
-  const url = `https://minaz.co.uk/insights/${article.slug}`;
+  const image =
+    getAbsoluteImageUrl(
+      article.image,
+    );
+
+  /*
+   * Global layout already adds "| MINAZ",
+   * so remove it if seo_title already
+   * contains it.
+   */
+  const title =
+    (
+      article.seoTitle ||
+      article.title
+    ).replace(
+      /\s*\|\s*MINAZ\s*$/i,
+      "",
+    );
+
+  const description =
+    article.seoDescription ||
+    article.excerpt;
+
+  const canonical =
+    `${SITE_URL}/insights/${article.slug}`;
 
   return {
-  title:
-    article.seoTitle ||
-    `${article.title} | MINAZ Intelligence`,
+    title,
+    description,
 
-  description:
-    article.seoDescription ||
-    article.excerpt,
+    alternates: {
+      canonical,
+    },
 
-  alternates: {
-    canonical: `https://minaz.co.uk/insights/${article.slug}`,
-  },
+    openGraph: {
+      type: "article",
 
-  openGraph: {
-  type: "article",
+      locale: "en_GB",
 
-  title: article.seoTitle || article.title,
+      siteName:
+        "MINAZ Transport and Logistics",
 
-  description:
-    article.seoDescription ||
-    article.excerpt,
+      title,
+      description,
 
-  url:
-    `https://minaz.co.uk/insights/${article.slug}`,
+      url: canonical,
 
-  images: article.image
-    ? [
+      images: [
         {
-          url: article.image,
+          url: image,
+          alt: article.title,
         },
-      ]
-    : ["/hero-minaz.jpg"],
+      ],
 
-  publishedTime:
-    article.publishedAt || undefined,
-},
-};
+      publishedTime:
+        article.publishedAt ||
+        undefined,
+    },
+
+    twitter: {
+      card:
+        "summary_large_image",
+
+      title,
+      description,
+
+      images: [
+        image,
+      ],
+    },
+  };
 }
 
 export default async function InsightArticlePage({
@@ -85,25 +144,57 @@ export default async function InsightArticlePage({
 
   const articleUrl = `https://minaz.co.uk/insights/${article.slug}`;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: article.title,
-    description: article.excerpt,
-    datePublished: article.publishedAt,
-    image: `https://minaz.co.uk${article.image}`,
-    mainEntityOfPage: articleUrl,
-    author: {
-      "@type": "Organization",
-      name: "MINAZ Transport and Logistics",
-      url: "https://minaz.co.uk",
-    },
-    publisher: {
-      "@type": "Organization",
-      name: "MINAZ Transport and Logistics",
-      url: "https://minaz.co.uk",
-    },
-  };
+  const articleImage =
+  getAbsoluteImageUrl(
+    article.image,
+  );
+
+const jsonLd = {
+  "@context":
+    "https://schema.org",
+
+  "@type":
+    "Article",
+
+  headline:
+    article.title,
+
+  description:
+    article.lead ||
+    article.excerpt,
+
+  datePublished:
+    article.publishedAt,
+
+  image: [
+    articleImage,
+  ],
+
+  mainEntityOfPage:
+    `${SITE_URL}/insights/${article.slug}`,
+
+  author: {
+    "@type":
+      "Organization",
+
+    name:
+      "MINAZ Transport and Logistics",
+
+    url:
+      SITE_URL,
+  },
+
+  publisher: {
+    "@type":
+      "Organization",
+
+    name:
+      "MINAZ Transport and Logistics",
+
+    url:
+      SITE_URL,
+  },
+};
 
   return (
     <main className="article-page">
