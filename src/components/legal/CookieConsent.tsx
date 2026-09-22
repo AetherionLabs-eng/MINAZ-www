@@ -17,6 +17,9 @@ type Consent = {
 export default function CookieConsent() {
   const pathname = usePathname();
 
+  const [ready, setReady] =
+    useState(false);
+
   const [visible, setVisible] =
     useState(false);
 
@@ -30,10 +33,8 @@ export default function CookieConsent() {
     useState(false);
 
   useEffect(() => {
-    /*
-     * Nie pokazujemy cookie popupu w adminie.
-     */
     if (pathname.startsWith("/admin")) {
+      setReady(true);
       return;
     }
 
@@ -44,6 +45,7 @@ export default function CookieConsent() {
       if (!existing) {
         const timer = window.setTimeout(() => {
           setVisible(true);
+          setReady(true);
         }, 500);
 
         return () =>
@@ -53,15 +55,12 @@ export default function CookieConsent() {
       const consent =
         JSON.parse(existing) as Consent;
 
-      setAnalytics(
-        Boolean(consent.analytics),
-      );
-
-      setMarketing(
-        Boolean(consent.marketing),
-      );
+      setAnalytics(Boolean(consent.analytics));
+      setMarketing(Boolean(consent.marketing));
+      setReady(true);
     } catch {
       setVisible(true);
+      setReady(true);
     }
   }, [pathname]);
 
@@ -75,16 +74,11 @@ export default function CookieConsent() {
           const consent =
             JSON.parse(existing) as Consent;
 
-          setAnalytics(
-            Boolean(consent.analytics),
-          );
-
-          setMarketing(
-            Boolean(consent.marketing),
-          );
+          setAnalytics(Boolean(consent.analytics));
+          setMarketing(Boolean(consent.marketing));
         }
       } catch {
-        // ignore
+        // Ignore malformed local storage.
       }
 
       setPreferencesOpen(true);
@@ -104,20 +98,15 @@ export default function CookieConsent() {
     };
   }, []);
 
-  function saveConsent(
-    options: {
-      analytics: boolean;
-      marketing: boolean;
-    },
-  ) {
+  function saveConsent(options: {
+    analytics: boolean;
+    marketing: boolean;
+  }) {
     const consent: Consent = {
       necessary: true,
-      analytics:
-        options.analytics,
-      marketing:
-        options.marketing,
-      updatedAt:
-        new Date().toISOString(),
+      analytics: options.analytics,
+      marketing: options.marketing,
+      updatedAt: new Date().toISOString(),
       version: 1,
     };
 
@@ -126,10 +115,6 @@ export default function CookieConsent() {
       JSON.stringify(consent),
     );
 
-    /*
-     * Przyda się później, kiedy dodamy
-     * GA4 / Meta Pixel / inne skrypty.
-     */
     window.dispatchEvent(
       new CustomEvent(
         "minaz:cookie-consent-updated",
@@ -139,13 +124,8 @@ export default function CookieConsent() {
       ),
     );
 
-    setAnalytics(
-      options.analytics,
-    );
-
-    setMarketing(
-      options.marketing,
-    );
+    setAnalytics(options.analytics);
+    setMarketing(options.marketing);
 
     setVisible(false);
     setPreferencesOpen(false);
@@ -174,9 +154,31 @@ export default function CookieConsent() {
 
   if (
     pathname.startsWith("/admin") ||
-    !visible
+    !ready
   ) {
     return null;
+  }
+
+  /*
+   * After the visitor has made a choice,
+   * keep a small permanent launcher in
+   * the lower-left corner.
+   */
+  if (!visible) {
+    return (
+      <button
+        type="button"
+        className="cookie-launcher"
+        onClick={() => {
+          setPreferencesOpen(true);
+          setVisible(true);
+        }}
+        aria-label="Open cookie settings"
+        title="Cookie settings"
+      >
+        <span aria-hidden="true">◔</span>
+      </button>
+    );
   }
 
   return (
@@ -195,9 +197,7 @@ export default function CookieConsent() {
       {!preferencesOpen ? (
         <>
           <div className="cookie-panel-head">
-            <span>
-              PRIVACY / COOKIES
-            </span>
+            <span>PRIVACY / COOKIES</span>
 
             <strong>
               Your privacy.
@@ -253,23 +253,26 @@ export default function CookieConsent() {
         </>
       ) : (
         <>
-          <div className="cookie-panel-head">
-            <span>
-              COOKIE SETTINGS
-            </span>
+          <div className="cookie-panel-head cookie-panel-head-settings">
+            <span>COOKIE SETTINGS</span>
 
             <strong>
-              Privacy
+              Cookie
               <br />
-              preferences.
+              settings.
             </strong>
+
+            <p>
+              Change the same preferences available
+              from the Privacy page and footer.
+            </p>
           </div>
 
           <div className="cookie-preferences">
             <div className="cookie-preference-row">
               <div>
                 <strong>
-                  Necessary
+                  Essential cookies
                 </strong>
 
                 <p>
@@ -287,7 +290,7 @@ export default function CookieConsent() {
             <div className="cookie-preference-row">
               <div>
                 <strong>
-                  Analytics
+                  Analytics cookies
                 </strong>
 
                 <p>
@@ -314,7 +317,7 @@ export default function CookieConsent() {
             <div className="cookie-preference-row">
               <div>
                 <strong>
-                  Marketing
+                  Marketing cookies
                 </strong>
 
                 <p>
@@ -339,7 +342,15 @@ export default function CookieConsent() {
             </div>
           </div>
 
-          <div className="cookie-actions">
+          <div className="cookie-actions cookie-actions-settings">
+            <button
+              type="button"
+              className="cookie-button"
+              onClick={necessaryOnly}
+            >
+              ESSENTIAL ONLY
+            </button>
+
             <button
               type="button"
               className="cookie-button cookie-button-primary"
@@ -357,6 +368,13 @@ export default function CookieConsent() {
               ACCEPT ALL
             </button>
           </div>
+
+          <Link
+            className="cookie-full-settings-link"
+            href="/privacy"
+          >
+            OPEN PRIVACY & COOKIE INFORMATION
+          </Link>
         </>
       )}
     </div>

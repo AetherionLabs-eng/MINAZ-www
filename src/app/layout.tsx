@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
+
 import "./globals.css";
+
+import MinazAiAssistant from "@/components/ai/MinazAiAssistant";
 import CookieConsent from "@/components/legal/CookieConsent";
+
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-manrope",
@@ -89,8 +93,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={manrope.variable}>{children}
+      <body className={manrope.variable}>
+        {children}
+
         <CookieConsent />
+        <MinazAiAssistant />
       </body>
     </html>
   );
