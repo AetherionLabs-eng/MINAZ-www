@@ -6302,3 +6302,254 @@ a span {
     padding: 16px;
   }
 }
+/* =========================================================
+   NEWSLETTER
+========================================================= */
+
+.newsletter-form {
+  width: 100%;
+}
+
+.newsletter-form-fields {
+  display: grid;
+  grid-template-columns:
+    minmax(180px, .8fr)
+    minmax(260px, 1.2fr)
+    auto;
+  gap: 14px;
+  align-items: end;
+}
+
+.newsletter-form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.newsletter-form-field label {
+  margin-bottom: 10px;
+  color: #66737d;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.newsletter-form-field input {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 14px;
+  border: 1px solid rgba(16, 26, 35, .16);
+  border-radius: 0;
+  background: white;
+  color: #111b24;
+  outline: none;
+  font: inherit;
+  font-size: 13px;
+}
+
+.newsletter-form-field input:focus {
+  border-color: #ef252d;
+}
+
+.newsletter-form-button {
+  min-height: 52px;
+  padding: 0 18px;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 35px;
+  border: 1px solid #ef252d;
+  background: #ef252d;
+  color: white;
+  cursor: pointer;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .13em;
+}
+
+.newsletter-form-button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+.newsletter-form-button strong {
+  font-size: 16px;
+}
+
+.newsletter-form-consent {
+  margin-top: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  cursor: pointer;
+}
+
+.newsletter-form-consent input {
+  width: 17px;
+  height: 17px;
+  min-width: 17px;
+  margin-top: 2px;
+  accent-color: #ef252d;
+}
+
+.newsletter-form-consent span {
+  max-width: 800px;
+  color: #68737c;
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.newsletter-form-consent a {
+  color: #111b24;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.newsletter-form-message {
+  margin-top: 18px;
+  padding: 14px 16px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.newsletter-form-message-success {
+  border: 1px solid rgba(25, 123, 76, .25);
+  background: rgba(25, 123, 76, .08);
+  color: #17623f;
+}
+
+.newsletter-form-message-error {
+  border: 1px solid rgba(239, 37, 45, .23);
+  background: rgba(239, 37, 45, .07);
+  color: #a81920;
+}
+
+/* compact/dark variant */
+
+.newsletter-form-compact
+.newsletter-form-fields {
+  grid-template-columns: 1fr;
+}
+
+.newsletter-form-compact
+.newsletter-form-field label {
+  color: #667784;
+}
+
+.newsletter-form-compact
+.newsletter-form-field input {
+  border-color: rgba(255,255,255,.14);
+  background: rgba(255,255,255,.035);
+  color: white;
+}
+
+.newsletter-form-compact
+.newsletter-form-consent span {
+  color: #71818d;
+}
+
+.newsletter-form-compact
+.newsletter-form-consent a {
+  color: white;
+}
+
+/* confirmation page */
+
+.newsletter-confirmed-page {
+  background: #07111c;
+}
+
+.newsletter-confirmed-hero {
+  min-height: 820px;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 78% 42%,
+      rgba(25, 69, 100, .28),
+      transparent 34%
+    ),
+    #07111c;
+  color: white;
+}
+
+.newsletter-confirmed-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(
+      rgba(255,255,255,.045) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.045) 1px,
+      transparent 1px
+    );
+  background-size: 150px 82px;
+}
+
+.newsletter-confirmed-inner {
+  min-height: 700px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.newsletter-confirmed-inner > span {
+  color: #ef252d;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .18em;
+}
+
+.newsletter-confirmed-inner h1 {
+  margin: 28px 0;
+  font-size: clamp(68px, 7vw, 128px);
+  line-height: .87;
+  letter-spacing: -.07em;
+}
+
+.newsletter-confirmed-inner h1 strong {
+  color: #ef252d;
+}
+
+.newsletter-confirmed-inner p {
+  max-width: 650px;
+  margin: 0;
+  color: #93a2ae;
+  font-size: 17px;
+  line-height: 1.85;
+}
+
+.newsletter-confirmed-actions {
+  margin-top: 38px;
+  display: flex;
+  gap: 12px;
+}
+
+@media (max-width: 760px) {
+  .newsletter-form-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .newsletter-form-button {
+    width: 100%;
+  }
+
+  .newsletter-confirmed-hero {
+    min-height: auto;
+  }
+
+  .newsletter-confirmed-inner {
+    min-height: 680px;
+  }
+
+  .newsletter-confirmed-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
