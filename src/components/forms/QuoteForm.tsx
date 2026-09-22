@@ -2,6 +2,10 @@
 
 import { FormEvent, useState } from "react";
 
+import {
+  NEWSLETTER_CONSENT_TEXT,
+} from "@/lib/newsletter/consent";
+
 type FormState =
   | {
       type: "idle";
@@ -87,6 +91,11 @@ export default function QuoteForm() {
       additional_information:
         formData.get("additional_information"),
 
+      newsletter_consent:
+        formData.get(
+          "newsletter_consent",
+        ) === "on",
+
       website:
         formData.get("website"),
     };
@@ -116,7 +125,10 @@ export default function QuoteForm() {
 setState({
   type: "success",
   message:
-    "Your freight request has been received. The MINAZ team will review the shipment details.",
+    payload.newsletter_consent &&
+    data.newsletterSubscriptionStatus === "queued"
+      ? "Your freight request has been received. Please also check your inbox to confirm your MINAZ email subscription."
+      : "Your freight request has been received. The MINAZ team will review the shipment details.",
   reference:
     typeof data.reference === "string"
       ? data.reference
@@ -415,6 +427,27 @@ setState({
           />
         </div>
       </section>
+
+      <div className="newsletter-consent">
+        <label
+          className="newsletter-consent-label"
+          htmlFor="quote-newsletter-consent"
+        >
+          <input
+            id="quote-newsletter-consent"
+            name="newsletter_consent"
+            type="checkbox"
+          />
+
+          <span>
+            {NEWSLETTER_CONSENT_TEXT}{" "}
+
+            <a href="/privacy">
+              Privacy Policy
+            </a>
+          </span>
+        </label>
+      </div>
 
       <div className="quote-submit-area">
         <div>

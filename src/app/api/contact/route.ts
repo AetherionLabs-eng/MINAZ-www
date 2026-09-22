@@ -12,6 +12,14 @@ import {
   contactCustomerEmail,
 } from "@/lib/email/templates";
 
+import {
+  subscribeToNewsletter,
+} from "@/lib/getresponse";
+
+import {
+  NEWSLETTER_CONSENT_TEXT,
+} from "@/lib/newsletter/consent";
+
 export const runtime = "nodejs";
 
 function cleanString(value: unknown) {
@@ -79,6 +87,14 @@ export async function POST(
       cleanString(
         body.message,
       );
+
+    const newsletterConsent =
+      body.newsletter_consent === true;
+
+    const newsletterConsentAt =
+      newsletterConsent
+        ? new Date().toISOString()
+        : null;
 
     /* VALIDATION */
 
@@ -155,6 +171,17 @@ export async function POST(
         phone,
         subject,
         message,
+
+        newsletter_consent:
+          newsletterConsent,
+
+        newsletter_consent_at:
+          newsletterConsentAt,
+
+        newsletter_consent_text:
+          newsletterConsent
+            ? NEWSLETTER_CONSENT_TEXT
+            : null,
 
         status: "new",
         source: "website",
@@ -303,6 +330,31 @@ export async function POST(
       );
     }
 
+    /* OPTIONAL NEWSLETTER */
+
+    let newsletterSubscriptionStatus:
+      | "not_requested"
+      | "queued"
+      | "already_subscribed"
+      | "failed" =
+      "not_requested";
+
+    if (newsletterConsent) {
+      const result =
+        await subscribeToNewsletter({
+          name,
+          email,
+        });
+
+      if (result.ok) {
+        newsletterSubscriptionStatus =
+          result.status;
+      } else {
+        newsletterSubscriptionStatus =
+          "failed";
+      }
+    }
+
     return NextResponse.json({
       ok: true,
 
@@ -312,6 +364,10 @@ export async function POST(
       adminNotificationSent,
 
       customerConfirmationSent,
+
+      newsletterConsent,
+
+      newsletterSubscriptionStatus,
     });
   } catch (error) {
     console.error(

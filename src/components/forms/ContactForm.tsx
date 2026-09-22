@@ -2,6 +2,10 @@
 
 import { FormEvent, useState } from "react";
 
+import {
+  NEWSLETTER_CONSENT_TEXT,
+} from "@/lib/newsletter/consent";
+
 type FormState =
   | { type: "idle"; message: "" }
   | { type: "success"; message: string }
@@ -38,6 +42,11 @@ export default function ContactForm() {
       subject: formData.get("subject"),
       message: formData.get("message"),
 
+      newsletter_consent:
+        formData.get(
+          "newsletter_consent",
+        ) === "on",
+
       // Honeypot
       website: formData.get("website"),
     };
@@ -66,7 +75,10 @@ export default function ContactForm() {
       setState({
         type: "success",
         message:
-          "Your message has been received. The MINAZ team will review your enquiry.",
+          payload.newsletter_consent &&
+          data.newsletterSubscriptionStatus === "queued"
+            ? "Your message has been received. Please also check your inbox to confirm your MINAZ email subscription."
+            : "Your message has been received. The MINAZ team will review your enquiry.",
       });
     } catch (error) {
       setState({
@@ -190,6 +202,27 @@ export default function ContactForm() {
           rows={7}
           placeholder="Tell us about your enquiry."
         />
+      </div>
+
+      <div className="newsletter-consent">
+        <label
+          className="newsletter-consent-label"
+          htmlFor="contact-newsletter-consent"
+        >
+          <input
+            id="contact-newsletter-consent"
+            name="newsletter_consent"
+            type="checkbox"
+          />
+
+          <span>
+            {NEWSLETTER_CONSENT_TEXT}{" "}
+
+            <a href="/privacy">
+              Privacy Policy
+            </a>
+          </span>
+        </label>
       </div>
 
       <div className="form-submit-row">

@@ -8435,3 +8435,49 @@ a span {
 
   transform: translateY(-1px);
 }
+/* Add this block to src/app/globals.css */
+
+.newsletter-consent {
+  margin: 24px 0;
+  padding: 18px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.newsletter-consent-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.newsletter-consent-label input {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  margin: 2px 0 0;
+  accent-color: #ef252d;
+  cursor: pointer;
+}
+
+.newsletter-consent-label span {
+  font-size: 13px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.newsletter-consent-label a {
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.newsletter-consent-label a:hover {
+  color: #ef252d;
+}
+
+@media (max-width: 640px) {
+  .newsletter-consent {
+    padding: 16px;
+  }
+}
