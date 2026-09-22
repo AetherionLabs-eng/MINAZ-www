@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import NewsletterForm from "@/components/forms/NewsletterForm";
 
 import {
   getPublishedInsights,
@@ -301,6 +302,33 @@ export default async function InsightsPage() {
                 <i>→</i>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===================================================
+          NEWSLETTER
+      =================================================== */}
+
+      <section className="insights-newsletter">
+        <div className="container insights-newsletter-inner">
+          <div className="insights-newsletter-copy">
+            <span>05 / MINAZ INTELLIGENCE</span>
+
+            <h2>
+              STAY AHEAD OF
+              <br />
+              <strong>THE MARKET.</strong>
+            </h2>
+
+            <p>
+              Selected freight, trade, customs and supply-chain
+              intelligence from MINAZ — delivered by email.
+            </p>
+          </div>
+
+          <div className="insights-newsletter-form">
+            <NewsletterForm source="insights" />
           </div>
         </div>
       </section>

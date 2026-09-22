@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import CookieSettingsButton from "@/components/legal/CookieSettingsButton";
+import NewsletterForm from "@/components/forms/NewsletterForm";
 
 const socialLinks = [
   {
@@ -28,6 +29,20 @@ const socialLinks = [
 export default function Footer() {
   return (
     <footer className="site-footer">
+      <div className="container footer-newsletter">
+        <div className="footer-newsletter-copy">
+          <span>MINAZ INTELLIGENCE</span>
+
+          <strong>
+            Freight and market intelligence,
+            delivered to your inbox.
+          </strong>
+        </div>
+
+        <div className="footer-newsletter-form">
+          <NewsletterForm source="footer" />
+        </div>
+      </div>
       <div className="container footer-main">
         <div className="footer-brand">
           <Link
