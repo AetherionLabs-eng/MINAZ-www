@@ -8440,8 +8440,8 @@ a span {
 .newsletter-consent {
   margin: 24px 0;
   padding: 18px 20px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(7, 17, 28, 0.12);
+  background: rgba(7, 17, 28, 0.025);
 }
 
 .newsletter-consent-label {
@@ -8463,11 +8463,12 @@ a span {
 .newsletter-consent-label span {
   font-size: 13px;
   line-height: 1.65;
-  color: rgba(255, 255, 255, 0.68);
+  color: #4b5563;
 }
 
 .newsletter-consent-label a {
-  color: #ffffff;
+  color: #07111c;
+  font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
