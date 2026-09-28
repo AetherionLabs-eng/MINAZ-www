@@ -4,11 +4,9 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import NewsletterForm from "@/components/forms/NewsletterForm";
+import InsightsCarousel from "@/components/insights/InsightsCarousel";
 
-import {
-  getPublishedInsights,
-  insightCategories,
-} from "@/lib/insights";
+import { getPublishedInsights } from "@/lib/insights";
 
 export const metadata: Metadata = {
   title: "MINAZ Intelligence | Logistics & Freight Insights",
@@ -215,96 +213,10 @@ export default async function InsightsPage() {
               </p>
             </div>
 
-            <div className="insights-latest-grid">
-              {latest.map((article, index) => (
-                <Link
-                  href={`/insights/${article.slug}`}
-                  className="latest-insight"
-                  key={article.slug}
-                >
-                  <div className="latest-insight-media">
-                    <div
-                      className="latest-insight-image"
-                      style={{
-                        backgroundImage: `
-                          linear-gradient(
-                            0deg,
-                            rgba(7,17,28,0.72),
-                            transparent 60%
-                          ),
-                          url("${article.image}")
-                        `,
-                      }}
-                    />
-
-                    <span className="latest-insight-number">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                  </div>
-
-                  <div className="latest-insight-copy">
-                    <div className="latest-insight-meta">
-                      <span>
-                        {article.category.toUpperCase()}
-                      </span>
-
-                      <small>
-                        {article.displayDate}
-                      </small>
-                    </div>
-
-                    <h2>{article.title}</h2>
-
-                    <p>{article.excerpt}</p>
-
-                    <div className="latest-insight-bottom">
-                      <span>{article.readingTime}</span>
-                      <strong>↗</strong>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+            <InsightsCarousel articles={latest} />
           </div>
         </section>
       )}
-
-      {/* ===================================================
-          CATEGORIES
-      =================================================== */}
-
-      <section className="insights-categories">
-        <div className="container insights-categories-inner">
-          <div>
-            <span className="section-index">
-              04 / TOPICS
-            </span>
-
-            <h2>
-              FOLLOW THE
-              <br />
-              <span>MARKET.</span>
-            </h2>
-          </div>
-
-          <div className="insights-category-list">
-            {insightCategories.map((category, index) => (
-              <div
-                className="insights-category-row"
-                key={category}
-              >
-                <span>
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-
-                <strong>{category}</strong>
-
-                <i>→</i>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ===================================================
           NEWSLETTER
@@ -313,7 +225,7 @@ export default async function InsightsPage() {
       <section className="insights-newsletter">
         <div className="container insights-newsletter-inner">
           <div className="insights-newsletter-copy">
-            <span>05 / MINAZ INTELLIGENCE</span>
+            <span>04 / MINAZ INTELLIGENCE</span>
 
             <h2>
               STAY AHEAD OF
